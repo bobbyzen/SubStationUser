@@ -65,86 +65,87 @@
 
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/ivTambah"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
                 android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toStartOf="@+id/textView6"
+                app:layout_constraintHorizontal_bias="0.493"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_add" />
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/ivGardu"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView6"
-                app:layout_constraintTop_toTopOf="@+id/imageView"
+                app:layout_constraintTop_toTopOf="@+id/ivTambah"
                 app:srcCompat="@drawable/ic_gardu" />
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/tvTambah"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="TAMBAH GARDU"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                app:layout_constraintEnd_toEndOf="@+id/imageView"
-                app:layout_constraintStart_toStartOf="@+id/imageView"
-                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+                app:layout_constraintEnd_toEndOf="@+id/ivTambah"
+                app:layout_constraintStart_toStartOf="@+id/ivTambah"
+                app:layout_constraintTop_toBottomOf="@+id/ivTambah" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/tvGardu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="GARDU"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                app:layout_constraintEnd_toEndOf="@+id/imageView2"
-                app:layout_constraintStart_toStartOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+                app:layout_constraintEnd_toEndOf="@+id/ivGardu"
+                app:layout_constraintStart_toStartOf="@+id/ivGardu"
+                app:layout_constraintTop_toBottomOf="@+id/ivGardu" />
 
             <ImageView
-                android:id="@+id/imageView3"
+                android:id="@+id/ivPengaduan"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
                 android:layout_marginTop="30dp"
-                app:layout_constraintEnd_toEndOf="@+id/imageView"
-                app:layout_constraintStart_toStartOf="@+id/imageView"
-                app:layout_constraintTop_toBottomOf="@+id/textView"
-                app:srcCompat="@drawable/ic_search2" />
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="CEK GARDU"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                app:layout_constraintEnd_toEndOf="@+id/imageView3"
-                app:layout_constraintStart_toStartOf="@+id/imageView3"
-                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
-
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                app:layout_constraintEnd_toEndOf="@+id/imageView2"
-                app:layout_constraintStart_toStartOf="@+id/imageView2"
-                app:layout_constraintTop_toTopOf="@+id/imageView3"
+                app:layout_constraintEnd_toEndOf="@+id/ivTambah"
+                app:layout_constraintStart_toStartOf="@+id/ivTambah"
+                app:layout_constraintTop_toBottomOf="@+id/tvTambah"
                 app:srcCompat="@drawable/ic_complaint" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/tvPengaduan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="PENGADUAN"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                app:layout_constraintEnd_toEndOf="@+id/imageView4"
-                app:layout_constraintStart_toStartOf="@+id/imageView4"
-                app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+                app:layout_constraintEnd_toEndOf="@+id/ivPengaduan"
+                app:layout_constraintStart_toStartOf="@+id/ivPengaduan"
+                app:layout_constraintTop_toBottomOf="@+id/ivPengaduan" />
+
+            <ImageView
+                android:id="@+id/ivBantuan"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                app:layout_constraintEnd_toEndOf="@+id/ivGardu"
+                app:layout_constraintStart_toStartOf="@+id/ivGardu"
+                app:layout_constraintTop_toTopOf="@+id/ivPengaduan"
+                app:srcCompat="@drawable/ic_bantuan" />
+
+            <TextView
+                android:id="@+id/tvBantuan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="BANTUAN"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                app:layout_constraintEnd_toEndOf="@+id/ivBantuan"
+                app:layout_constraintStart_toStartOf="@+id/ivBantuan"
+                app:layout_constraintTop_toBottomOf="@+id/ivBantuan" />
 
             <TextView
                 android:id="@+id/textView6"
