@@ -1,51 +1,62 @@
 package com.bzen.substationuser;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
+import java.util.concurrent.ExecutionException;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     ImageView ivTambah, ivGardu, ivPengaduan, ivBantuan;
     TextView tvTambah, tvGardu, tvPengaduan, tvBantuan;
+    SaveSharedPreferences saveSharedPreference;
+
+    ConstraintLayout background;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        saveSharedPreference = new SaveSharedPreferences();
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+        background = findViewById(R.id.background);
+        try {
+            Drawable b = Glide.with(this).asDrawable().load(R.drawable.bgc).into(100,100).get();
+            background.setBackground(b);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        ivTambah = findViewById(R.id.ivTambah);
-        ivTambah.setOnClickListener(this);
+        if(saveSharedPreference.getEmail(MainActivity.this).length() == 0){
 
-        tvTambah = findViewById(R.id.tvTambah);
-        tvTambah.setOnClickListener(this);
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
 
-        ivGardu = findViewById(R.id.ivGardu);
-        ivGardu.setOnClickListener(this);
+        }else{
 
-        tvGardu = findViewById(R.id.tvGardu);
-        tvGardu.setOnClickListener(this);
+            setContentView(R.layout.activity_main);
 
-        ivPengaduan = findViewById(R.id.ivPengaduan);
-        ivPengaduan.setOnClickListener(this);
+            ivTambah = findViewById(R.id.ivTambah);
+            ivTambah.setOnClickListener(this);
 
-        tvPengaduan = findViewById(R.id.tvPengaduan);
-        tvPengaduan.setOnClickListener(this);
+            ivGardu = findViewById(R.id.ivGardu);
+            ivGardu.setOnClickListener(this);
 
-        ivBantuan = findViewById(R.id.ivBantuan);
-        ivBantuan.setOnClickListener(this);
+            ivPengaduan = findViewById(R.id.ivPengaduan);
+            ivPengaduan.setOnClickListener(this);
 
-        tvBantuan = findViewById(R.id.tvBantuan);
-        tvBantuan.setOnClickListener(this);
-
-        Toast.makeText(this, "AAA", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -56,26 +67,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(this, MapsActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.tvTambah :
-                Toast.makeText(this, "Tambah", Toast.LENGTH_SHORT).show();
-                break;
             case R.id.ivGardu :
-                Toast.makeText(this, "Gardu", Toast.LENGTH_SHORT).show();
-                break;
-            case  R.id.tvGardu :
                 Toast.makeText(this, "Gardu", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.ivPengaduan :
                 Toast.makeText(this, "Pengaduan", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.tvPengaduan :
-                Toast.makeText(this, "Pengaduan", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.ivBantuan :
-                Toast.makeText(this, "Bantuan", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.tvBantuan :
-                Toast.makeText(this, "Bantuan", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
