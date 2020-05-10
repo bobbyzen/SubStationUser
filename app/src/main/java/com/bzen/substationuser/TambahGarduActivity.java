@@ -187,7 +187,7 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
                         public void onMapClick(LatLng latLng) {
                             MarkerOptions markerOptions = new MarkerOptions();
                             markerOptions.position(latLng);
-                            markerOptions.title(ChangeLongLatToAddress(latLng) + "," + latLng.longitude + "," + latLng.latitude);
+                            markerOptions.title(ChangeLongLatToAddress(latLng));
                             map.addMarker(markerOptions);
                         }
                     });
