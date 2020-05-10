@@ -1,4 +1,38 @@
 <resources>
     <string name="app_name">SubStationUser</string>
     <string name="title_activity_maps">Map</string>
+
+    <string-array name="jenis">
+        <item>Beton (BN)</item>
+        <item>Tiang (TG)</item>
+        <item>Kios (KS)</item>
+    </string-array>
+
+    <string-array name="jenis_maintenance">
+        <item>Aman</item>
+        <item>Maintenance</item>
+        <item>Mati</item>
+    </string-array>
+
+    <string-array name="jenis_wilayah">
+        <item>Alang-alang Lebar (AAL)</item>
+        <item>Bukit Kecil(BKL)</item>
+        <item>Gandus(GDS)</item>
+        <item>Ilir Barat I(IBS)</item>
+        <item>Ilir Barat II(IBD)</item>
+        <item> Ilir Timur I(ITS)</item>
+        <item>Ilir Timur II(ITD)</item>
+        <item>Ilir Timur III(ITT)</item>
+        <item>Jakabaring(JBG)</item>
+        <item>Kemuning(KMN)</item>
+        <item>Kertapati(KTP)</item>
+        <item>Plaju(PLJ)</item>
+        <item>Sako(SAK)</item>
+        <item>Seberang Ulu I(SUS)</item>
+        <item>Seberang Ulu II(SUD)</item>
+        <item>Sematang Borang(SMB)</item>
+        <item>Sukarame(SKR)</item>
+
+
+    </string-array>
 </resources>

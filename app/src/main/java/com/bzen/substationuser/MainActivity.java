@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.btnTambah :
                 Toast.makeText(this, "Tambah", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, MapsActivity.class);
+                Intent intent = new Intent(this, TambahGarduActivity.class);
                 startActivity(intent);
                 break;
             case R.id.btnGardu :
