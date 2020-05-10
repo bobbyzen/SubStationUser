@@ -195,127 +195,143 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
                     map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(final Marker marker) {
+                            rootRef.child("PengajuanGardu").addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    listGardu = new HashMap<>();
+                                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                        Gardu gardu = child.getValue(Gardu.class);
+                                        listGardu.put(gardu.getId(), gardu);
+                                    }
 
-                            if(!listGardu.containsKey(marker.getTitle())){
-                                //Tanya Mau tambah atau hapus
-                                final AlertDialog alertDialog = new AlertDialog.Builder(TambahGarduActivity.this).create();
-                                alertDialog.setTitle("Lokasi mau ditambah ?");
-                                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ya", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        LayoutInflater inflater = getLayoutInflater();
-                                        View dialogView = inflater.inflate(R.layout.alert_dialog_tambah_gardu, null);
-                                        final Spinner spinner = dialogView.findViewById(R.id.spinnerJenisGardu);
-                                        final Spinner spinner1 = dialogView.findViewById(R.id.spinnerJenisWilayah);
-                                        final Spinner spinner2 = dialogView.findViewById(R.id.spinnerJenisStatus);
-                                        final TextView tvTanggal = dialogView.findViewById(R.id.tvTanggal);
-
-                                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(TambahGarduActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.jenis));
-                                        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                        spinner.setAdapter(arrayAdapter);
-
-                                        ArrayAdapter<String> arrayAdapter1 = new ArrayAdapter<String>(TambahGarduActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.jenis_wilayah));
-                                        arrayAdapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                        spinner1.setAdapter(arrayAdapter1);
-
-                                        ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(TambahGarduActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.jenis_maintenance));
-                                        arrayAdapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                        spinner2.setAdapter(arrayAdapter2);
-
-                                        //tanggal otomatis
-                                        final DateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
-                                        final Date date = new Date();
-                                        tvTanggal.setText(dateFormat.format(date));
-
-
-                                        final AlertDialog dialog = new AlertDialog.Builder(TambahGarduActivity.this).create();
-                                        dialog.setView(dialogView);
-                                        dialog.setCancelable(true);
-                                        dialog.setIcon(R.drawable.gardu_fix);
-                                        dialog.setTitle("Form Tambah Gardu");
-                                        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ya", new DialogInterface.OnClickListener() {
+                                    if(!listGardu.containsKey(marker.getTitle())){
+                                        //Tanya Mau tambah atau hapus
+                                        final AlertDialog alertDialog = new AlertDialog.Builder(TambahGarduActivity.this).create();
+                                        alertDialog.setTitle("Lokasi mau ditambah ?");
+                                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ya", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
-                                                rootRef.child("PengajuanGardu").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                LayoutInflater inflater = getLayoutInflater();
+                                                View dialogView = inflater.inflate(R.layout.alert_dialog_tambah_gardu, null);
+                                                final Spinner spinner = dialogView.findViewById(R.id.spinnerJenisGardu);
+                                                final Spinner spinner1 = dialogView.findViewById(R.id.spinnerJenisWilayah);
+                                                final Spinner spinner2 = dialogView.findViewById(R.id.spinnerJenisStatus);
+                                                final TextView tvTanggal = dialogView.findViewById(R.id.tvTanggal);
+
+                                                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(TambahGarduActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.jenis));
+                                                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                                spinner.setAdapter(arrayAdapter);
+
+                                                ArrayAdapter<String> arrayAdapter1 = new ArrayAdapter<String>(TambahGarduActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.jenis_wilayah));
+                                                arrayAdapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                                spinner1.setAdapter(arrayAdapter1);
+
+                                                ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(TambahGarduActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.jenis_maintenance));
+                                                arrayAdapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                                spinner2.setAdapter(arrayAdapter2);
+
+                                                //tanggal otomatis
+                                                final DateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
+                                                final Date date = new Date();
+                                                tvTanggal.setText(dateFormat.format(date));
+
+
+                                                final AlertDialog dialog = new AlertDialog.Builder(TambahGarduActivity.this).create();
+                                                dialog.setView(dialogView);
+                                                dialog.setCancelable(true);
+                                                dialog.setIcon(R.drawable.gardu_fix);
+                                                dialog.setTitle("Form Tambah Gardu");
+                                                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ya", new DialogInterface.OnClickListener() {
                                                     @Override
-                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                        int counter = 1;
-                                                        String jenisGardu = spinner.getSelectedItem().toString().substring(spinner.getSelectedItem().toString().length()-3, spinner.getSelectedItem().toString().length()-1);
-                                                        String jenisWilayah = spinner1.getSelectedItem().toString().substring(spinner1.getSelectedItem().toString().length()-4, spinner1.getSelectedItem().toString().length()-1);
-                                                        for(DataSnapshot child : dataSnapshot.getChildren()){
-                                                            Gardu gardu = child.getValue(Gardu.class);
-                                                            if(gardu.getId().substring(0,5).equals(jenisGardu+jenisWilayah)){
-                                                                counter++;
-                                                            }
-                                                        }
-
-                                                        String [] addlonglat = marker.getTitle().split(",");
-
-                                                        Gardu gardu = new Gardu();
-                                                        String convertCounter = ConvertCounter(counter);
-                                                        gardu.setId(jenisGardu+jenisWilayah+convertCounter);
-                                                        gardu.setLongitude(String.valueOf(marker.getPosition().longitude));
-                                                        gardu.setLatitude(String.valueOf(marker.getPosition().latitude));
-                                                        gardu.setAlamat(marker.getTitle().substring(14));
-                                                        gardu.setJenisGardu(String.valueOf(spinner.getSelectedItemId()));
-                                                        gardu.setStatus(String.valueOf(spinner2.getSelectedItemId()));
-                                                        gardu.setTanggal(dateFormat.format(date));
-                                                        gardu.setWilayah(String.valueOf(spinner1.getSelectedItemId()));
-
-                                                        //TambahGardu
-                                                        HashMap<String,String> data = new HashMap<>();
-                                                        data.put("id", gardu.getId());
-                                                        data.put("longitude", String.valueOf(gardu.getLongitude()));
-                                                        data.put("latitude", String.valueOf(gardu.getLatitude()));
-                                                        data.put("alamat", gardu.getAlamat());
-                                                        data.put("jenis_gardu", gardu.getJenisGardu());
-                                                        data.put("status", gardu.getStatus());
-                                                        data.put("tanggal", gardu.getTanggal());
-                                                        data.put("wilayah",gardu.getWilayah());
-                                                        rootRef.child("PengajuanGardu").child(gardu.getId()).setValue(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                        rootRef.child("PengajuanGardu").addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
-                                                            public void onSuccess(Void aVoid) {
-                                                                marker.remove();
-                                                                Toast.makeText(TambahGarduActivity.this, "Data disimpan", Toast.LENGTH_SHORT).show();
+                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                int counter = 1;
+                                                                String jenisGardu = spinner.getSelectedItem().toString().substring(spinner.getSelectedItem().toString().length()-3, spinner.getSelectedItem().toString().length()-1);
+                                                                String jenisWilayah = spinner1.getSelectedItem().toString().substring(spinner1.getSelectedItem().toString().length()-4, spinner1.getSelectedItem().toString().length()-1);
+                                                                for(DataSnapshot child : dataSnapshot.getChildren()){
+                                                                    Gardu gardu = child.getValue(Gardu.class);
+                                                                    if(gardu.getId().substring(0,5).equals(jenisGardu+jenisWilayah)){
+                                                                        counter++;
+                                                                    }
+                                                                }
+
+                                                                String [] addlonglat = marker.getTitle().split(",");
+
+                                                                Gardu gardu = new Gardu();
+                                                                String convertCounter = ConvertCounter(counter);
+                                                                gardu.setId(jenisGardu+jenisWilayah+convertCounter);
+                                                                gardu.setLongitude(String.valueOf(marker.getPosition().longitude));
+                                                                gardu.setLatitude(String.valueOf(marker.getPosition().latitude));
+                                                                gardu.setAlamat(marker.getTitle().substring(14));
+                                                                gardu.setJenisGardu(String.valueOf(spinner.getSelectedItemId()));
+                                                                gardu.setStatus(String.valueOf(spinner2.getSelectedItemId()));
+                                                                gardu.setTanggal(dateFormat.format(date));
+                                                                gardu.setWilayah(String.valueOf(spinner1.getSelectedItemId()));
+
+                                                                //TambahGardu
+                                                                HashMap<String,String> data = new HashMap<>();
+                                                                data.put("id", gardu.getId());
+                                                                data.put("longitude", String.valueOf(gardu.getLongitude()));
+                                                                data.put("latitude", String.valueOf(gardu.getLatitude()));
+                                                                data.put("alamat", gardu.getAlamat());
+                                                                data.put("jenis_gardu", gardu.getJenisGardu());
+                                                                data.put("status", gardu.getStatus());
+                                                                data.put("tanggal", gardu.getTanggal());
+                                                                data.put("wilayah",gardu.getWilayah());
+                                                                rootRef.child("PengajuanGardu").child(gardu.getId()).setValue(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void aVoid) {
+                                                                        marker.remove();
+                                                                        Toast.makeText(TambahGarduActivity.this, "Data disimpan", Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                });
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
                                                             }
                                                         });
                                                     }
-
+                                                });
+                                                dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Tidak", new DialogInterface.OnClickListener() {
                                                     @Override
-                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                        dialog.cancel();
                                                     }
                                                 });
+                                                dialog.show();
+
                                             }
                                         });
-                                        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Tidak", new DialogInterface.OnClickListener() {
+                                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Tidak", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
-                                                dialog.cancel();
+                                                marker.remove();
                                             }
                                         });
-                                        dialog.show();
+                                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Kembali", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                dialogInterface.cancel();
+                                            }
+                                        });
+                                        alertDialog.setCancelable(false);
+                                        alertDialog.show();
+                                    }
+                                    else{
+                                        Toast.makeText(TambahGarduActivity.this, marker.getTitle(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
 
-                                    }
-                                });
-                                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Tidak", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        marker.remove();
-                                    }
-                                });
-                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Kembali", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.cancel();
-                                    }
-                                });
-                                alertDialog.setCancelable(false);
-                                alertDialog.show();
-                            }
-                            else{
-                                Toast.makeText(TambahGarduActivity.this, marker.getTitle(), Toast.LENGTH_SHORT).show();
-                            }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+
                             return true;
                         }
                     });
