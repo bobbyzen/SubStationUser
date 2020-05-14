@@ -8,4 +8,19 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="btnCancel" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">#FFF</item>
+        <item name="colorButtonNormal">@color/grey</item>
+    </style>
+
+    <style name="btnHapus" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">#FFF</item>
+        <item name="colorButtonNormal">@color/grey</item>
+    </style>
+
+    <style name="btnTambah" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">#FFF</item>
+        <item name="backgroundColor">#00fd6b</item>
+    </style>
+
 </resources>

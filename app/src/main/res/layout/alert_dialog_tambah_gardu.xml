@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
@@ -14,12 +17,22 @@
         android:layout_margin="10dp"
         />
 
-    <Spinner
-        android:id="@+id/spinnerJenisGardu"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        />
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#caffff"
+        >
+
+        <Spinner
+            android:id="@+id/spinnerJenisGardu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            />
+
+    </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -31,12 +44,22 @@
         android:layout_margin="10dp"
         />
 
-    <Spinner
-        android:id="@+id/spinnerJenisWilayah"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        />
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#caffff">
+
+        <Spinner
+            android:id="@+id/spinnerJenisWilayah"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            />
+
+    </RelativeLayout>
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -48,12 +71,21 @@
         android:layout_margin="10dp"
         />
 
-    <Spinner
-        android:id="@+id/spinnerJenisStatus"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        />
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#caffff">
+
+        <Spinner
+            android:id="@+id/spinnerJenisStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -63,7 +95,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tanggal : "
+            android:text="Tanggal      : "
             android:textColor="@android:color/black"
             android:textSize="20sp"
             android:layout_centerHorizontal="true"
@@ -82,5 +114,52 @@
             />
 
     </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content">
+
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_button1"
+            android:drawableLeft="@drawable/ic_close"
+            android:text="Tidak"
+            style="@style/btnHapus"
+            android:paddingLeft="15dp"
+            android:padding="15dp"
+            android:textColor="#FFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="16dp"
+            android:drawableLeft="@drawable/ic_ya"
+            android:text="Ya"
+            android:paddingLeft="15dp"
+            style="@style/btnTambah"
+            android:padding="15dp"
+            android:background="@drawable/bg_button2"
+            android:textColor="#FFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
 
 </LinearLayout>

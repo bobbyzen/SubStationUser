@@ -6,10 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -21,6 +23,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -207,7 +210,7 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
                                     if(!listGardu.containsKey(marker.getTitle())){
                                         //Tanya Mau tambah atau hapus
                                         final AlertDialog alertDialog = new AlertDialog.Builder(TambahGarduActivity.this).create();
-                                        alertDialog.setTitle("Lokasi mau ditambah ?");
+                                        alertDialog.setTitle("Tambah gardu sesuai lokasi ?");
                                         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ya", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -241,6 +244,7 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
                                                 dialog.setCancelable(true);
                                                 dialog.setIcon(R.drawable.gardu_fix);
                                                 dialog.setTitle("Form Tambah Gardu");
+                                                dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
                                                 dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ya", new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -306,7 +310,7 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
 
                                             }
                                         });
-                                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Tidak", new DialogInterface.OnClickListener() {
+                                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Hapus", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
                                                 marker.remove();
@@ -319,11 +323,31 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
                                             }
                                         });
                                         alertDialog.setCancelable(false);
+                                        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                                            @Override
+                                            public void onShow(DialogInterface dialog) {
+//                                                Button positiveButton = ((AlertDialog) dialog)
+//                                                        .getButton(AlertDialog.BUTTON_POSITIVE);
+//                                                positiveButton.setBackground(getResources().getDrawable(R.drawable.dialog_bg_positive));
+//
+//                                                Button negativeButton = ((AlertDialog) dialog)
+//                                                        .getButton(AlertDialog.BUTTON_NEGATIVE);
+//                                                negativeButton.setBackground(getResources().getDrawable(R.drawable.dialog_bg_negative));
+//
+//                                                Button neutralButton = ((AlertDialog) dialog)
+//                                                        .getButton(AlertDialog.BUTTON_NEUTRAL);
+//                                                neutralButton.setBackground(getResources().getDrawable(R.drawable.dialog_bg_cancel));
+                                                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.red));
+                                                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.green));
+                                                alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.grey));
+                                            }
+                                        });
                                         alertDialog.show();
                                     }
                                     else{
                                         Toast.makeText(TambahGarduActivity.this, marker.getTitle(), Toast.LENGTH_SHORT).show();
                                     }
+
                                 }
 
                                 @Override

@@ -30,16 +30,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         saveSharedPreference = new SaveSharedPreferences();
 
-//        background = findViewById(R.id.background);
-//        try {
-//            Drawable b = Glide.with(this).asDrawable().load(R.drawable.bgc).into(100,100).get();
-//            background.setBackground(b);
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-
         if(saveSharedPreference.getEmail(MainActivity.this).length() == 0){
 
             Intent intent = new Intent(this, LoginActivity.class);
@@ -48,15 +38,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }else{
 
             setContentView(R.layout.activity_main);
-
-//            ivTambah = findViewById(R.id.ivTambah);
-//            ivTambah.setOnClickListener(this);
-//
-//            ivGardu = findViewById(R.id.ivGardu);
-//            ivGardu.setOnClickListener(this);
-//
-//            ivPengaduan = findViewById(R.id.ivPengaduan);
-//            ivPengaduan.setOnClickListener(this);
 
             btnGardu = findViewById(R.id.btnGardu);
             btnGardu.setOnClickListener(this);
@@ -74,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnTambah :
-                Toast.makeText(this, "Tambah", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, TambahGarduActivity.class);
                 startActivity(intent);
                 break;
