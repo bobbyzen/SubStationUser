@@ -122,12 +122,10 @@
 
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btnTidak"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
+
             android:background="@drawable/bg_button1"
             android:drawableLeft="@drawable/ic_close"
             android:text="Tidak"
@@ -135,12 +133,13 @@
             android:paddingLeft="15dp"
             android:padding="15dp"
             android:textColor="#FFF"
+            app:layout_constraintEnd_toStartOf="@id/btnYa"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/btnYa"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -153,6 +152,7 @@
             android:padding="15dp"
             android:background="@drawable/bg_button2"
             android:textColor="#FFF"
+            app:layout_constraintStart_toEndOf="@id/btnTidak"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

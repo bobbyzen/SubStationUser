@@ -210,16 +210,26 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
                                     if(!listGardu.containsKey(marker.getTitle())){
                                         //Tanya Mau tambah atau hapus
                                         final AlertDialog alertDialog = new AlertDialog.Builder(TambahGarduActivity.this).create();
+                                        LayoutInflater inflater = getLayoutInflater();
+                                        View dialogView = inflater.inflate(R.layout.alert1, null);
+                                        alertDialog.setView(dialogView);
                                         alertDialog.setTitle("Tambah gardu sesuai lokasi ?");
-                                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ya", new DialogInterface.OnClickListener() {
+
+                                        Button btnTambah = dialogView.findViewById(R.id.btnTambah);
+                                        Button btnHapus = dialogView.findViewById(R.id.btnHapus);
+                                        Button btnKembali = dialogView.findViewById(R.id.btnKembali);
+
+                                        btnTambah.setOnClickListener(new View.OnClickListener() {
                                             @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                            public void onClick(View view) {
                                                 LayoutInflater inflater = getLayoutInflater();
                                                 View dialogView = inflater.inflate(R.layout.alert_dialog_tambah_gardu, null);
                                                 final Spinner spinner = dialogView.findViewById(R.id.spinnerJenisGardu);
                                                 final Spinner spinner1 = dialogView.findViewById(R.id.spinnerJenisWilayah);
                                                 final Spinner spinner2 = dialogView.findViewById(R.id.spinnerJenisStatus);
                                                 final TextView tvTanggal = dialogView.findViewById(R.id.tvTanggal);
+                                                final Button btnYa = dialogView.findViewById(R.id.btnYa);
+                                                final Button btnTidak = dialogView.findViewById(R.id.btnTidak);
 
                                                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(TambahGarduActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.jenis));
                                                 arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -245,9 +255,10 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
                                                 dialog.setIcon(R.drawable.gardu_fix);
                                                 dialog.setTitle("Form Tambah Gardu");
                                                 dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
-                                                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Ya", new DialogInterface.OnClickListener() {
+
+                                                btnYa.setOnClickListener(new View.OnClickListener() {
                                                     @Override
-                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                    public void onClick(View view) {
                                                         rootRef.child("PengajuanGardu").addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
                                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -287,8 +298,11 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
                                                                 rootRef.child("PengajuanGardu").child(gardu.getId()).setValue(data).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                     @Override
                                                                     public void onSuccess(Void aVoid) {
+                                                                        alertDialog.cancel();
+                                                                        dialog.cancel();
                                                                         marker.remove();
                                                                         Toast.makeText(TambahGarduActivity.this, "Data disimpan", Toast.LENGTH_SHORT).show();
+                                                                        recreate();
                                                                     }
                                                                 });
                                                             }
@@ -300,43 +314,37 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
                                                         });
                                                     }
                                                 });
-                                                dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Tidak", new DialogInterface.OnClickListener() {
+
+                                                btnTidak.setOnClickListener(new View.OnClickListener() {
                                                     @Override
-                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                    public void onClick(View view) {
                                                         dialog.cancel();
+                                                        alertDialog.cancel();
                                                     }
                                                 });
-                                                dialog.show();
 
+                                                dialog.show();
                                             }
                                         });
-                                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Hapus", new DialogInterface.OnClickListener() {
+
+                                        btnHapus.setOnClickListener(new View.OnClickListener() {
                                             @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                            public void onClick(View view) {
                                                 marker.remove();
+                                                alertDialog.cancel();
                                             }
                                         });
-                                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Kembali", new DialogInterface.OnClickListener() {
+
+                                        btnKembali.setOnClickListener(new View.OnClickListener() {
                                             @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                                dialogInterface.cancel();
+                                            public void onClick(View view) {
+                                                alertDialog.cancel();
                                             }
                                         });
                                         alertDialog.setCancelable(false);
                                         alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
                                             @Override
                                             public void onShow(DialogInterface dialog) {
-//                                                Button positiveButton = ((AlertDialog) dialog)
-//                                                        .getButton(AlertDialog.BUTTON_POSITIVE);
-//                                                positiveButton.setBackground(getResources().getDrawable(R.drawable.dialog_bg_positive));
-//
-//                                                Button negativeButton = ((AlertDialog) dialog)
-//                                                        .getButton(AlertDialog.BUTTON_NEGATIVE);
-//                                                negativeButton.setBackground(getResources().getDrawable(R.drawable.dialog_bg_negative));
-//
-//                                                Button neutralButton = ((AlertDialog) dialog)
-//                                                        .getButton(AlertDialog.BUTTON_NEUTRAL);
-//                                                neutralButton.setBackground(getResources().getDrawable(R.drawable.dialog_bg_cancel));
                                                 alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.red));
                                                 alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.green));
                                                 alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.grey));
