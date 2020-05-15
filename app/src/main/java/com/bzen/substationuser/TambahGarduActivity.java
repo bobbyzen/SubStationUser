@@ -7,9 +7,11 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -18,18 +20,22 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bzen.substationuser.Helper.StringHelper;
 import com.bzen.substationuser.Model.Gardu;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -68,21 +74,53 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
     ImageButton btnSearchLocation;
     EditText etAddress;
     HashMap<String, Gardu> listGardu;
+    CheckBox cbVerify;
+
+    ProgressDialog progressDialog;
+    ValueEventListener valueEventListener;
+
+    private SharedPreferences mPreferences;
+    private String sharedPrefFile = "SUBSTATION";
+    private final static String DATA_KEY = "DATA_KEY";
+
+    StringHelper helper = new StringHelper();
+    AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tambah_gardu);
-
+        mPreferences = getSharedPreferences(sharedPrefFile, MODE_PRIVATE);
         supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         btnSearchLocation = findViewById(R.id.btnSearch);
         etAddress = findViewById(R.id.etAddress);
         rootRef = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
+        cbVerify = findViewById(R.id.cbVerify);
+        cbVerify.setChecked(false);
+
 
         grantPermission();
         checkLocationIsEnableOrNot();
         getLocation();
+
+        cbVerify.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                            TambahGardu(helper.StringToHashmap(mPreferences.getString(DATA_KEY, "")));
+                            cbVerify.setChecked(false);
+                            recreate();
+                        }
+                    }, 5000);
+                }
+            }
+        });
     }
 
 
@@ -198,7 +236,7 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
                     map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(final Marker marker) {
-                            rootRef.child("PengajuanGardu").addValueEventListener(new ValueEventListener() {
+                             valueEventListener = rootRef.child("PengajuanGardu").addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     listGardu = new HashMap<>();
@@ -209,7 +247,7 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
 
                                     if(!listGardu.containsKey(marker.getTitle())){
                                         //Tanya Mau tambah atau hapus
-                                        final AlertDialog alertDialog = new AlertDialog.Builder(TambahGarduActivity.this).create();
+                                        alertDialog = new AlertDialog.Builder(TambahGarduActivity.this).create();
                                         LayoutInflater inflater = getLayoutInflater();
                                         View dialogView = inflater.inflate(R.layout.alert1, null);
                                         alertDialog.setView(dialogView);
@@ -295,16 +333,17 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
                                                                 data.put("status", gardu.getStatus());
                                                                 data.put("tanggal", gardu.getTanggal());
                                                                 data.put("wilayah",gardu.getWilayah());
-                                                                rootRef.child("PengajuanGardu").child(gardu.getId()).setValue(data).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                    @Override
-                                                                    public void onSuccess(Void aVoid) {
-                                                                        alertDialog.cancel();
-                                                                        dialog.cancel();
-                                                                        marker.remove();
-                                                                        Toast.makeText(TambahGarduActivity.this, "Data disimpan", Toast.LENGTH_SHORT).show();
-                                                                        recreate();
-                                                                    }
-                                                                });
+
+                                                                cbVerify.setChecked(true);
+                                                                SharedPreferences.Editor preferencesEditor = mPreferences.edit();
+                                                                preferencesEditor.putString(DATA_KEY, helper.HashmapToString(data));
+                                                                preferencesEditor.apply();
+                                                                progressDialog = new ProgressDialog(TambahGarduActivity.this);
+                                                                progressDialog.setMessage("Menyimpan ...");
+                                                                progressDialog.show();
+                                                                dialog.cancel();
+                                                                marker.remove();
+                                                                alertDialog.cancel();
                                                             }
 
                                                             @Override
@@ -342,14 +381,6 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
                                             }
                                         });
                                         alertDialog.setCancelable(false);
-                                        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                                            @Override
-                                            public void onShow(DialogInterface dialog) {
-                                                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.red));
-                                                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.green));
-                                                alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.grey));
-                                            }
-                                        });
                                         alertDialog.show();
                                     }
                                     else{
@@ -363,6 +394,7 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
 
                                 }
                             });
+
 
                             return true;
                         }
@@ -382,11 +414,13 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
-                                Address address = addressList.get(0);
-                                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                                googleMap.addMarker(new MarkerOptions().position(latLng).title(location));
-                                googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-                                Toast.makeText(getApplicationContext(),address.getLatitude()+" "+address.getLongitude(),Toast.LENGTH_LONG).show();
+                                if(addressList.size() > 0){
+                                    Address address = addressList.get(0);
+                                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                                    googleMap.addMarker(new MarkerOptions().position(latLng).title(location));
+                                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                                    Toast.makeText(getApplicationContext(),address.getLatitude()+" "+address.getLongitude(),Toast.LENGTH_LONG).show();
+                                }
                             }
                             else{
                                 Toast.makeText(TambahGarduActivity.this, "Lokasi belum diisi", Toast.LENGTH_SHORT).show();
@@ -399,6 +433,16 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void TambahGardu(HashMap<String, String> data) {
+        rootRef.child("PengajuanGardu").removeEventListener(valueEventListener);
+        rootRef.child("PengajuanGardu").child(data.get("id")).setValue(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        });
     }
 
     private String ConvertCounter(int counter) {
