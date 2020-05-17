@@ -12,11 +12,11 @@ public class Gardu implements Parcelable {
     private String tanggal;
     private String wilayah;
     private String jenisGardu;
+    private String diajukan_oleh;
+    private String diacc;
+    private String maintenance_terakhir;
 
-    public Gardu() {
-    }
-
-    public Gardu(String id, String longitude, String latitude, String status, String alamat, String tanggal, String wilayah, String jenisGardu) {
+    public Gardu(String id, String longitude, String latitude, String status, String alamat, String tanggal, String wilayah, String jenisGardu, String diajukan_oleh, String diacc, String maintenance_terakhir) {
         this.id = id;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -25,6 +25,12 @@ public class Gardu implements Parcelable {
         this.tanggal = tanggal;
         this.wilayah = wilayah;
         this.jenisGardu = jenisGardu;
+        this.diajukan_oleh = diajukan_oleh;
+        this.diacc = diacc;
+        this.maintenance_terakhir = maintenance_terakhir;
+    }
+
+    public Gardu() {
     }
 
     protected Gardu(Parcel in) {
@@ -36,6 +42,9 @@ public class Gardu implements Parcelable {
         tanggal = in.readString();
         wilayah = in.readString();
         jenisGardu = in.readString();
+        diajukan_oleh = in.readString();
+        diacc = in.readString();
+        maintenance_terakhir = in.readString();
     }
 
     public static final Creator<Gardu> CREATOR = new Creator<Gardu>() {
@@ -114,6 +123,30 @@ public class Gardu implements Parcelable {
         this.jenisGardu = jenisGardu;
     }
 
+    public String getDiajukan_oleh() {
+        return diajukan_oleh;
+    }
+
+    public void setDiajukan_oleh(String diajukan_oleh) {
+        this.diajukan_oleh = diajukan_oleh;
+    }
+
+    public String getDiacc() {
+        return diacc;
+    }
+
+    public void setDiacc(String diacc) {
+        this.diacc = diacc;
+    }
+
+    public String getMaintenance_terakhir() {
+        return maintenance_terakhir;
+    }
+
+    public void setMaintenance_terakhir(String maintenance_terakhir) {
+        this.maintenance_terakhir = maintenance_terakhir;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -129,5 +162,8 @@ public class Gardu implements Parcelable {
         parcel.writeString(tanggal);
         parcel.writeString(wilayah);
         parcel.writeString(jenisGardu);
+        parcel.writeString(diajukan_oleh);
+        parcel.writeString(diacc);
+        parcel.writeString(maintenance_terakhir);
     }
 }

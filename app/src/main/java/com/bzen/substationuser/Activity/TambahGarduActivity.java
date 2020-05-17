@@ -1,4 +1,4 @@
-package com.bzen.substationuser;
+package com.bzen.substationuser.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -6,14 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -37,6 +35,8 @@ import android.widget.Toast;
 
 import com.bzen.substationuser.Helper.StringHelper;
 import com.bzen.substationuser.Model.Gardu;
+import com.bzen.substationuser.Model.User;
+import com.bzen.substationuser.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -56,7 +56,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -86,6 +85,8 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
     StringHelper helper = new StringHelper();
     AlertDialog alertDialog;
 
+    User user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,6 +113,7 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
+
                             progressDialog.dismiss();
                             TambahGardu(helper.StringToHashmap(mPreferences.getString(DATA_KEY, "")));
                             cbVerify.setChecked(false);
@@ -177,7 +179,6 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
             Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
             final List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
 
-            System.out.println("BETUL" + addresses.get(0).getAddressLine(0));
             supportMapFragment.getMapAsync(new OnMapReadyCallback() {
                 @Override
                 public void onMapReady(final GoogleMap googleMap) {
@@ -187,13 +188,22 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
                     map.addMarker(options);
 
-                    rootRef.child("PengajuanGardu").addValueEventListener(new ValueEventListener() {
+                    rootRef.child("Gardu").addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            googleMap.clear();
+                            map = googleMap;
+                            LatLng latLng = new LatLng(addresses.get(0).getLatitude(), addresses.get(0).getLongitude());
+                            MarkerOptions options = new MarkerOptions().position(latLng).title("I am here").icon(BitmapDescriptorFactory.fromResource(R.drawable.signs));
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+                            map.addMarker(options);
+
                             listGardu = new HashMap<>();
                             for(DataSnapshot child : dataSnapshot.getChildren()){
                                 Gardu gardu = child.getValue(Gardu.class);
-                                listGardu.put(gardu.getId(), gardu);
+                                if(gardu.getDiacc().equals("0")){
+                                    listGardu.put(gardu.getId(), gardu);
+                                }
                             }
 
                             for (Map.Entry<String, Gardu> entry : listGardu.entrySet()) {
@@ -236,7 +246,7 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
                     map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(final Marker marker) {
-                             valueEventListener = rootRef.child("PengajuanGardu").addValueEventListener(new ValueEventListener() {
+                             rootRef.child("Gardu").addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                     listGardu = new HashMap<>();
@@ -245,147 +255,20 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
                                         listGardu.put(gardu.getId(), gardu);
                                     }
 
-                                    if(!listGardu.containsKey(marker.getTitle())){
-                                        //Tanya Mau tambah atau hapus
-                                        alertDialog = new AlertDialog.Builder(TambahGarduActivity.this).create();
-                                        LayoutInflater inflater = getLayoutInflater();
-                                        View dialogView = inflater.inflate(R.layout.alert1, null);
-                                        alertDialog.setView(dialogView);
-                                        alertDialog.setTitle("Tambah gardu sesuai lokasi ?");
+                                    rootRef.child("User").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            user = dataSnapshot.getValue(User.class);
 
-                                        Button btnTambah = dialogView.findViewById(R.id.btnTambah);
-                                        Button btnHapus = dialogView.findViewById(R.id.btnHapus);
-                                        Button btnKembali = dialogView.findViewById(R.id.btnKembali);
+                                        }
 
-                                        btnTambah.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View view) {
-                                                LayoutInflater inflater = getLayoutInflater();
-                                                View dialogView = inflater.inflate(R.layout.alert_dialog_tambah_gardu, null);
-                                                final Spinner spinner = dialogView.findViewById(R.id.spinnerJenisGardu);
-                                                final Spinner spinner1 = dialogView.findViewById(R.id.spinnerJenisWilayah);
-                                                final Spinner spinner2 = dialogView.findViewById(R.id.spinnerJenisStatus);
-                                                final TextView tvTanggal = dialogView.findViewById(R.id.tvTanggal);
-                                                final Button btnYa = dialogView.findViewById(R.id.btnYa);
-                                                final Button btnTidak = dialogView.findViewById(R.id.btnTidak);
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(TambahGarduActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.jenis));
-                                                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                                spinner.setAdapter(arrayAdapter);
-
-                                                ArrayAdapter<String> arrayAdapter1 = new ArrayAdapter<String>(TambahGarduActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.jenis_wilayah));
-                                                arrayAdapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                                spinner1.setAdapter(arrayAdapter1);
-
-                                                ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(TambahGarduActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.jenis_maintenance));
-                                                arrayAdapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                                spinner2.setAdapter(arrayAdapter2);
-
-                                                //tanggal otomatis
-                                                final DateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
-                                                final Date date = new Date();
-                                                tvTanggal.setText(dateFormat.format(date));
+                                        }
+                                    });
 
 
-                                                final AlertDialog dialog = new AlertDialog.Builder(TambahGarduActivity.this).create();
-                                                dialog.setView(dialogView);
-                                                dialog.setCancelable(true);
-                                                dialog.setIcon(R.drawable.gardu_fix);
-                                                dialog.setTitle("Form Tambah Gardu");
-                                                dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
-
-                                                btnYa.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View view) {
-                                                        rootRef.child("PengajuanGardu").addListenerForSingleValueEvent(new ValueEventListener() {
-                                                            @Override
-                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                int counter = 1;
-                                                                String jenisGardu = spinner.getSelectedItem().toString().substring(spinner.getSelectedItem().toString().length()-3, spinner.getSelectedItem().toString().length()-1);
-                                                                String jenisWilayah = spinner1.getSelectedItem().toString().substring(spinner1.getSelectedItem().toString().length()-4, spinner1.getSelectedItem().toString().length()-1);
-                                                                for(DataSnapshot child : dataSnapshot.getChildren()){
-                                                                    Gardu gardu = child.getValue(Gardu.class);
-                                                                    if(gardu.getId().substring(0,5).equals(jenisGardu+jenisWilayah)){
-                                                                        counter++;
-                                                                    }
-                                                                }
-
-                                                                String [] addlonglat = marker.getTitle().split(",");
-
-                                                                Gardu gardu = new Gardu();
-                                                                String convertCounter = ConvertCounter(counter);
-                                                                gardu.setId(jenisGardu+jenisWilayah+convertCounter);
-                                                                gardu.setLongitude(String.valueOf(marker.getPosition().longitude));
-                                                                gardu.setLatitude(String.valueOf(marker.getPosition().latitude));
-                                                                gardu.setAlamat(marker.getTitle().substring(14));
-                                                                gardu.setJenisGardu(String.valueOf(spinner.getSelectedItemId()));
-                                                                gardu.setStatus(String.valueOf(spinner2.getSelectedItemId()));
-                                                                gardu.setTanggal(dateFormat.format(date));
-                                                                gardu.setWilayah(String.valueOf(spinner1.getSelectedItemId()));
-
-                                                                //TambahGardu
-                                                                HashMap<String,String> data = new HashMap<>();
-                                                                data.put("id", gardu.getId());
-                                                                data.put("longitude", String.valueOf(gardu.getLongitude()));
-                                                                data.put("latitude", String.valueOf(gardu.getLatitude()));
-                                                                data.put("alamat", gardu.getAlamat());
-                                                                data.put("jenis_gardu", gardu.getJenisGardu());
-                                                                data.put("status", gardu.getStatus());
-                                                                data.put("tanggal", gardu.getTanggal());
-                                                                data.put("wilayah",gardu.getWilayah());
-
-                                                                cbVerify.setChecked(true);
-                                                                SharedPreferences.Editor preferencesEditor = mPreferences.edit();
-                                                                preferencesEditor.putString(DATA_KEY, helper.HashmapToString(data));
-                                                                preferencesEditor.apply();
-                                                                progressDialog = new ProgressDialog(TambahGarduActivity.this);
-                                                                progressDialog.setMessage("Menyimpan ...");
-                                                                progressDialog.show();
-                                                                dialog.cancel();
-                                                                marker.remove();
-                                                                alertDialog.cancel();
-                                                            }
-
-                                                            @Override
-                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                            }
-                                                        });
-                                                    }
-                                                });
-
-                                                btnTidak.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View view) {
-                                                        dialog.cancel();
-                                                        alertDialog.cancel();
-                                                    }
-                                                });
-
-                                                dialog.show();
-                                            }
-                                        });
-
-                                        btnHapus.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View view) {
-                                                marker.remove();
-                                                alertDialog.cancel();
-                                            }
-                                        });
-
-                                        btnKembali.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View view) {
-                                                alertDialog.cancel();
-                                            }
-                                        });
-                                        alertDialog.setCancelable(false);
-                                        alertDialog.show();
-                                    }
-                                    else{
-                                        Toast.makeText(TambahGarduActivity.this, marker.getTitle(), Toast.LENGTH_SHORT).show();
-                                    }
 
                                 }
 
@@ -395,6 +278,144 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
                                 }
                             });
 
+                            if(!listGardu.containsKey(marker.getTitle()) && !marker.getTitle().equals("I am here")){
+                                //Tanya Mau tambah atau hapus
+                                alertDialog = new AlertDialog.Builder(TambahGarduActivity.this).create();
+                                LayoutInflater inflater = getLayoutInflater();
+                                View dialogView = inflater.inflate(R.layout.alert1, null);
+                                alertDialog.setView(dialogView);
+                                alertDialog.setTitle("Tambah gardu sesuai lokasi ?");
+
+                                Button btnTambah = dialogView.findViewById(R.id.btnTambah);
+                                Button btnHapus = dialogView.findViewById(R.id.btnHapus);
+                                Button btnKembali = dialogView.findViewById(R.id.btnKembali);
+
+                                btnTambah.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        LayoutInflater inflater = getLayoutInflater();
+                                        View dialogView = inflater.inflate(R.layout.alert_dialog_tambah_gardu, null);
+                                        final Spinner spinner = dialogView.findViewById(R.id.spinnerJenisGardu);
+                                        final Spinner spinner2 = dialogView.findViewById(R.id.spinnerJenisStatus);
+                                        final TextView tvTanggal = dialogView.findViewById(R.id.tvTanggal);
+                                        final Button btnYa = dialogView.findViewById(R.id.btnYa);
+                                        final Button btnTidak = dialogView.findViewById(R.id.btnTidak);
+
+                                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(TambahGarduActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.jenis));
+                                        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                        spinner.setAdapter(arrayAdapter);
+
+                                        ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(TambahGarduActivity.this, android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.jenis_maintenance));
+                                        arrayAdapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                        spinner2.setAdapter(arrayAdapter2);
+
+                                        //tanggal otomatis
+                                        final DateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
+                                        final Date date = new Date();
+                                        tvTanggal.setText(dateFormat.format(date));
+
+
+                                        final AlertDialog dialog = new AlertDialog.Builder(TambahGarduActivity.this).create();
+                                        dialog.setView(dialogView);
+                                        dialog.setCancelable(true);
+                                        dialog.setIcon(R.drawable.gardu_fix);
+                                        dialog.setTitle("Form Tambah Gardu");
+                                        dialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg);
+
+                                        btnYa.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                rootRef.child("Gardu").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                        int counter = 1;
+                                                        String jenisGardu = spinner.getSelectedItem().toString().substring(spinner.getSelectedItem().toString().length()-3, spinner.getSelectedItem().toString().length()-1);
+                                                        String jenisWilayah = user.getId().substring(1,4);
+                                                        for(DataSnapshot child : dataSnapshot.getChildren()){
+                                                            Gardu gardu = child.getValue(Gardu.class);
+                                                            if(gardu.getId().substring(0,5).equals(jenisGardu+jenisWilayah)){
+                                                                counter++;
+                                                            }
+                                                        }
+
+                                                        Gardu gardu = new Gardu();
+                                                        String convertCounter = ConvertCounter(counter);
+                                                        gardu.setId(jenisGardu+jenisWilayah+convertCounter);
+                                                        gardu.setLongitude(String.valueOf(marker.getPosition().longitude));
+                                                        gardu.setLatitude(String.valueOf(marker.getPosition().latitude));
+                                                        gardu.setAlamat(marker.getTitle().substring(14));
+                                                        gardu.setJenisGardu(String.valueOf(spinner.getSelectedItemId()));
+                                                        gardu.setStatus(String.valueOf(spinner2.getSelectedItemId()));
+                                                        gardu.setTanggal(dateFormat.format(date));
+                                                        gardu.setWilayah(user.getWilayah());
+                                                        gardu.setDiajukan_oleh(mAuth.getCurrentUser().getUid());
+                                                        gardu.setDiacc("0");
+
+                                                        //TambahGardu
+                                                        HashMap<String,String> data = new HashMap<>();
+                                                        data.put("id", gardu.getId());
+                                                        data.put("longitude", String.valueOf(gardu.getLongitude()));
+                                                        data.put("latitude", String.valueOf(gardu.getLatitude()));
+                                                        data.put("alamat", gardu.getAlamat());
+                                                        data.put("jenis_gardu", gardu.getJenisGardu());
+                                                        data.put("status", gardu.getStatus());
+                                                        data.put("tanggal", gardu.getTanggal());
+                                                        data.put("wilayah",gardu.getWilayah());
+                                                        data.put("diajukan_oleh", gardu.getDiajukan_oleh());
+                                                        data.put("diacc", gardu.getDiacc());
+
+                                                        cbVerify.setChecked(true);
+                                                        SharedPreferences.Editor preferencesEditor = mPreferences.edit();
+                                                        preferencesEditor.putString(DATA_KEY, helper.HashmapToString(data));
+                                                        preferencesEditor.apply();
+                                                        progressDialog = new ProgressDialog(TambahGarduActivity.this);
+                                                        progressDialog.setMessage("Menyimpan ...");
+                                                        progressDialog.show();
+                                                        dialog.cancel();
+                                                        marker.remove();
+                                                        alertDialog.cancel();
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                    }
+                                                });
+                                            }
+                                        });
+
+                                        btnTidak.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                dialog.cancel();
+                                                alertDialog.cancel();
+                                            }
+                                        });
+
+                                        dialog.show();
+                                    }
+                                });
+
+                                btnHapus.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        marker.remove();
+                                        alertDialog.cancel();
+                                    }
+                                });
+
+                                btnKembali.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        alertDialog.cancel();
+                                    }
+                                });
+                                alertDialog.setCancelable(false);
+                                alertDialog.show();
+                            }
+                            else{
+                                Toast.makeText(TambahGarduActivity.this, marker.getTitle(), Toast.LENGTH_SHORT).show();
+                            }
 
                             return true;
                         }
@@ -436,8 +457,7 @@ public class TambahGarduActivity extends AppCompatActivity implements LocationLi
     }
 
     private void TambahGardu(HashMap<String, String> data) {
-        rootRef.child("PengajuanGardu").removeEventListener(valueEventListener);
-        rootRef.child("PengajuanGardu").child(data.get("id")).setValue(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+        rootRef.child("Gardu").child(data.get("id")).setValue(data).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
 

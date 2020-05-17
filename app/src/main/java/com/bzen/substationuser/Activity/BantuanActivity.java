@@ -1,8 +1,10 @@
-package com.bzen.substationuser;
+package com.bzen.substationuser.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.bzen.substationuser.R;
 
 public class BantuanActivity extends AppCompatActivity {
 

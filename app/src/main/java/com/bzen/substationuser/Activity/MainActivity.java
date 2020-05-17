@@ -1,21 +1,16 @@
-package com.bzen.substationuser;
+package com.bzen.substationuser.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-
-import java.util.concurrent.ExecutionException;
+import com.bzen.substationuser.R;
+import com.bzen.substationuser.SaveSharedPreferences;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 //    ImageView ivTambah, ivGardu, ivPengaduan, ivBantuan;
@@ -59,10 +54,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.btnGardu :
-                Toast.makeText(this, "Gardu", Toast.LENGTH_SHORT).show();
+                Intent intent1 = new Intent(this, LihatGarduActivity.class);
+                startActivity(intent1);
                 break;
             case R.id.btnPengaduan :
-                Toast.makeText(this, "Pengaduan", Toast.LENGTH_SHORT).show();
+                Intent intent2 = new Intent(this, PengaduanActivity.class);
+                startActivity(intent2);
                 break;
         }
     }

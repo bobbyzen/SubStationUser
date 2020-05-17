@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvGardu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Jenis Gardu"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Maintenance Sebelum / Sesudahh"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        />
+
+    <TextView
+        android:id="@+id/tvMaintenance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="{{Maintenance Sebelum / Sesudah}}"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tanggal Sebelum / Sesudahh"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        />
+
+    <TextView
+        android:id="@+id/tvTanggal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="{{Tanggal Sebelum / Sesudah}}"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Deskripsi"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+    />
+
+    <TextView
+        android:id="@+id/tvDeskripsi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="{{Deskripsi}}"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dihandle oleh"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        />
+
+    <TextView
+        android:id="@+id/tvDihandle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="{{Dihandle oleh}}"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        />
+
+</LinearLayout>

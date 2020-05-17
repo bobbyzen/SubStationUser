@@ -19,7 +19,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TambahGarduActivity"></activity>
+        <activity android:name=".Activity.PengaduanActivity"></activity>
+        <activity android:name=".Activity.LihatGarduActivity" />
+        <activity android:name=".Activity.TambahGarduActivity" />
         <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,10 +44,9 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".BantuanActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".MainActivity">
-        </activity>
+        <activity android:name=".Activity.BantuanActivity" />
+        <activity android:name=".Activity.LoginActivity" />
+        <activity android:name=".Activity.MainActivity" />
     </application>
 
 </manifest>

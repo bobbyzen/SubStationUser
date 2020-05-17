@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
+    app:cardCornerRadius="5dp"
+    app:cardElevation="3dp"
+    android:clickable="false"
+    android:focusable="false"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardUseCompatPadding="false"
+    android:id="@+id/card_item"
+    app:contentPadding="1dp"
+    app:cardBackgroundColor="@color/colorPrimary">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:background="@android:color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="125dp">
+
+                <ImageView
+                    android:id="@+id/ivGardu"
+                    android:layout_width="120dp"
+                    android:layout_height="fill_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="10dp"
+                    android:scaleType="fitXY">
+                </ImageView>
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginBottom="2dp">
+
+                <TextView
+                    android:id="@+id/tvGardu"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
+
+                <TextView
+                    android:id="@+id/tvTanggalMaintenance"
+                    android:layout_below="@id/tvGardu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:maxLines="3"
+                    android:ellipsize="end"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
