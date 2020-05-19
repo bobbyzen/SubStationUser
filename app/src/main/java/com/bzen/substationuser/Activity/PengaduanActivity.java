@@ -50,7 +50,11 @@ public class PengaduanActivity extends AppCompatActivity {
                 listPengaduan = new ArrayList<>();
                 for(DataSnapshot child : dataSnapshot.getChildren()){
                     Pengaduan pengaduan = child.getValue(Pengaduan.class);
-                    listPengaduan.add(pengaduan);
+
+                    if(mAuth.getCurrentUser().getUid().equals(pengaduan.getUser_id())){
+                        listPengaduan.add(pengaduan);
+                    }
+
                 }
 
                 adapter = new PengaduanAdapter(listPengaduan, mAuth.getCurrentUser().getDisplayName());
